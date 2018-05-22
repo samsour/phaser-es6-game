@@ -1,6 +1,6 @@
 import ExampleObject from 'objects/ExampleObject';
 
-class Main extends Phaser.State {
+export default class Main extends Phaser.State {
 
 	create() {
 
@@ -19,5 +19,3 @@ class Main extends Phaser.State {
 	}
 
 }
-
-export default Main;

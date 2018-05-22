@@ -1,4 +1,4 @@
-class GameOver extends Phaser.State {
+export default class GameOver extends Phaser.State {
 
 	create() {
 
@@ -9,5 +9,3 @@ class GameOver extends Phaser.State {
 	}
 
 }
-
-export default GameOver;

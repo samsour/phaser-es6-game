@@ -1,4 +1,4 @@
-class Boot extends Phaser.State {
+export default class Boot extends Phaser.State {
 
 	preload() {
 
@@ -10,5 +10,3 @@ class Boot extends Phaser.State {
 	}
 
 }
-
-export default Boot;

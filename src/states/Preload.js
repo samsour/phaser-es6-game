@@ -1,4 +1,4 @@
-class Preload extends Phaser.State {
+export default class Preload extends Phaser.State {
 
 	preload() {
 		/* Preload required assets */
@@ -13,5 +13,3 @@ class Preload extends Phaser.State {
 	}
 
 }
-
-export default Preload;

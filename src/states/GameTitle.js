@@ -1,4 +1,4 @@
-class GameTitle extends Phaser.State {
+export default class GameTitle extends Phaser.State {
 
 	create() {
 
@@ -9,5 +9,3 @@ class GameTitle extends Phaser.State {
 	}
 
 }
-
-export default GameTitle;
