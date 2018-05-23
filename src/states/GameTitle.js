@@ -5,7 +5,6 @@ export default class GameTitle extends Phaser.State {
 	}
 
 	startGame() {
-		console.log('create');
 		// this.game.state.start("Main");
 	}
 

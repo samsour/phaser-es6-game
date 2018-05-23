@@ -5,7 +5,6 @@ export default class GameOver extends Phaser.State {
 	}
 
 	restartGame() {
-		console.log('create');
 		// this.game.state.start("Main");
 	}
 
