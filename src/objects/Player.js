@@ -7,6 +7,16 @@ export default class Player {
             left: false,
             right: false
 		}
+
+		this.hp = 100;
+		this.mp = 20;
+		this.attackDamage = 1;
+		this.magicDamage = 1;
+		this.speed = 150;
+		this.jumpability = 420;
+
+		this.gravity = 600;
+		this.bounce = 0.2;
 	}
 
 	spawn(x,y) {
@@ -17,8 +27,8 @@ export default class Player {
 		this.sprite.enableBody = true;
 
 	    //  Player physics properties. Give the little guy a slight bounce.
-	    this.sprite.body.gravity.y = 600;
-	    this.sprite.body.bounce.y = 0.2;
+	    this.sprite.body.gravity.y = this.gravity;
+	    this.sprite.body.bounce.y = this.bounce;
 	    this.sprite.body.collideWorldBounds = true;
 
 		// Center the sprite image
@@ -30,17 +40,17 @@ export default class Player {
 	}
 
 	moveLeft() {
-		this.sprite.body.velocity.x = -150;
+		this.sprite.body.velocity.x = -(this.speed);
 		this.sprite.animations.play('left');
 	}
 
 	moveRight() {
-		this.sprite.body.velocity.x = 150;
+		this.sprite.body.velocity.x = this.speed;
 		this.sprite.animations.play('right');
 	}
 
 	jump() {
-		this.sprite.body.velocity.y = -300;
+		this.sprite.body.velocity.y = -(this.jumpability);
 	}
 
 	idle() {

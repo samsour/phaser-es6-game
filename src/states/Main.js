@@ -43,11 +43,9 @@ export default class Main extends Phaser.State {
 		// update frames
 
 		this.player1.sprite.hittingPlatform = this.game.physics.arcade.collide(this.player1.sprite, this.platforms);
-		//  Reset the players velocity (movement)
 		this.player1.sprite.body.velocity.x = 0;
 
 		this.player2.sprite.hittingPlatform = this.game.physics.arcade.collide(this.player2.sprite, this.platforms);
-		//  Reset the players velocity (movement)
 		this.player2.sprite.body.velocity.x = 0;
 
 		// Player 1
