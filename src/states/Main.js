@@ -1,4 +1,4 @@
-import ExampleObject from 'objects/ExampleObject';
+import Player from 'objects/Player';
 
 export default class Main extends Phaser.State {
 
@@ -39,57 +39,108 @@ export default class Main extends Phaser.State {
 
 
 
-	    // The player and its settings
-	    this.player = this.game.add.sprite(32, this.game.world.height - 150, 'dude');
+	    // The player 1 and its settings
+	    this.player1 = this.game.add.sprite(32, this.game.world.height - 250, 'dude');
 
 	    //  We need to enable physics on the player
-	    this.game.physics.arcade.enable(this.player);
+	    this.game.physics.arcade.enable(this.player1);
 
 	    //  Player physics properties. Give the little guy a slight bounce.
-	    this.player.body.bounce.y = 0.2;
-	    this.player.body.gravity.y = 300;
-	    this.player.body.collideWorldBounds = true;
+	    this.player1.body.bounce.y = 0.2;
+	    this.player1.body.gravity.y = 600;
+	    this.player1.body.collideWorldBounds = true;
 
 	    //  Our two animations, walking left and right.
-	    this.player.animations.add('left', [0, 1, 2, 3], 10, true);
-	    this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+	    this.player1.animations.add('left', [0, 1, 2, 3], 10, true);
+		this.player1.animations.add('right', [5, 6, 7, 8], 10, true);
 
+
+	    // The player 2 and its settings
+	    this.player2 = this.game.add.sprite(64, this.game.world.height - 650, 'dude');
+
+	    //  We need to enable physics on the player
+	    this.game.physics.arcade.enable(this.player2);
+
+	    //  Player physics properties. Give the little guy a slight bounce.
+	    this.player2.body.bounce.y = 0.2;
+	    this.player2.body.gravity.y = 600;
+	    this.player2.body.collideWorldBounds = true;
+
+	    //  Our two animations, walking left and right.
+	    this.player2.animations.add('left', [0, 1, 2, 3], 10, true);
+		this.player2.animations.add('right', [5, 6, 7, 8], 10, true);
+
+		this.keyboard = {
+			w: this.game.input.keyboard.addKey(Phaser.Keyboard.W),
+			a: this.game.input.keyboard.addKey(Phaser.Keyboard.A),
+			s: this.game.input.keyboard.addKey(Phaser.Keyboard.S),
+			d: this.game.input.keyboard.addKey(Phaser.Keyboard.D),
+			i: this.game.input.keyboard.addKey(Phaser.Keyboard.I),
+			j: this.game.input.keyboard.addKey(Phaser.Keyboard.J),
+			k: this.game.input.keyboard.addKey(Phaser.Keyboard.K),
+			l: this.game.input.keyboard.addKey(Phaser.Keyboard.L)
+		};
+
+		this.playerList = [
+			this.player1, this.player2
+		];
+		console.log(this.playerList);
 	}
 
 	update() {
 		// update frames
-		console.log('update;');
+		
 
-		const hitPlatform = this.game.physics.arcade.collide(this.player, this.platforms);
+		this.playerList.forEach( player => {
+			player.hittingPlatform = this.game.physics.arcade.collide(player, this.platforms);
 
-		this.cursors = this.game.input.keyboard.createCursorKeys();
+			//  Reset the players velocity (movement)
+			player.body.velocity.x = 0;
+		});
 
-		//  Reset the players velocity (movement)
-	    this.player.body.velocity.x = 0;
+		// Player 1
+		if (this.keyboard.a.isDown){
+			//  Move to the left
+			this.player1.body.velocity.x = -150;
+			this.player1.animations.play('left');
+		} else if (this.keyboard.d.isDown) {
+			//  Move to the right
+			this.player1.body.velocity.x = 150;
+			this.player1.animations.play('right');
+		} else {
+			//  Stand still
+			this.player1.animations.stop();
+			this.player1.frame = 4;
+		}
 
-	    if (this.cursors.left.isDown)
-	    {
-	        //  Move to the left
-	        this.player.body.velocity.x = -150;
-	        this.player.animations.play('left');
-	    }
-	    else if (this.cursors.right.isDown)
-	    {
-	        //  Move to the right
-	        this.player.body.velocity.x = 150;
-	        this.player.animations.play('right');
-	    }
-	    else
-	    {
-	        //  Stand still
-	        this.player.animations.stop();
-	        this.player.frame = 4;
-	    }
+		//  Allow the player to jump if they are touching the ground
+		if (this.keyboard.w.isDown && this.player1.body.touching.down && this.player1.hittingPlatform)
+		{	
+			console.log("Jump!");
+			this.player1.body.velocity.y = -300;
+		}
 
-	    //  Allow the player to jump if they are touching the ground.
-	    if (this.cursors.up.isDown && this.player.body.touching.down && hitPlatform)
-	    {
-	        this.player.body.velocity.y = -150;
-	    }
+
+		// Player 2
+		if (this.keyboard.j.isDown){
+			//  Move to the left
+			this.player2.body.velocity.x = -150;
+			this.player2.animations.play('left');
+		} else if (this.keyboard.l.isDown) {
+			//  Move to the right
+			this.player2.body.velocity.x = 150;
+			this.player2.animations.play('right');
+		} else {
+			//  Stand still
+			this.player2.animations.stop();
+			this.player2.frame = 4;
+		}
+
+		//  Allow the player to jump if they are touching the ground
+		if (this.keyboard.i.isDown && this.player2.body.touching.down && this.player2.hittingPlatform)
+		{	
+			console.log("Jump!");
+			this.player2.body.velocity.y = -300;
+		}
 	}
 }
