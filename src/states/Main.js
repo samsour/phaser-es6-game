@@ -23,12 +23,10 @@ export default class Main extends Phaser.State {
 	    this.ground.body.immovable = true;
 
 	    //  Now let's create two ledges
-	    this.ledge = this.platforms.create(400, 400, 'ground');
-	    this.ledge.body.immovable = true;
-	    this.ledge = this.platforms.create(-150, 250, 'ground');
-	    this.ledge.body.immovable = true;
-	    this.ledge = this.platforms.create(150, 150, 'ground');
-	    this.ledge.body.immovable = true;
+		this.ledge = this.platforms.create(400, 400, 'ground');
+		this.ledge = this.platforms.create(450, 100, 'ground');
+	    this.ledge = this.platforms.create(-150, 300, 'ground');
+	    this.ledge = this.platforms.create(360, 180, 'ground');
 
 		this.player1 = new Player(this.game);
 		this.player2 = new Player(this.game);
