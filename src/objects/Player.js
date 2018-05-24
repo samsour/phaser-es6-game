@@ -1,12 +1,9 @@
+import Weapon from './Weapon.js';
+
 export default class Player {
 
 	constructor(game){
 		this.game = game;
-
-		this.moving = {
-            left: false,
-            right: false
-		}
 
 		this.hp = 100;
 		this.mp = 20;
@@ -15,13 +12,13 @@ export default class Player {
 		this.speed = 150;
 		this.jumpability = 420;
 
-		this.gravity = 600;
-		this.bounce = 0.2;
+		this.gravity = 1000;
+		this.bounce = 0.3;
 	}
 
 	spawn(x,y) {
 		
-	    this.sprite = this.game.add.sprite(x, y, 'dude');
+	    this.sprite = this.game.add.sprite(x, y, 'archer');
 	    //  Enable physics on the player
 		this.game.physics.arcade.enable(this.sprite);
 		this.sprite.enableBody = true;
@@ -31,20 +28,26 @@ export default class Player {
 	    this.sprite.body.bounce.y = this.bounce;
 	    this.sprite.body.collideWorldBounds = true;
 
-		// Center the sprite image
+		// Center & enlarge the sprite image
 		this.sprite.anchor.setTo(0.5,0.5);
+		this.sprite.smoothed = false;
+		this.sprite.scale.set(5,5);
 
-	    //  Our two animations, walking left and right.
-	    this.sprite.animations.add('left', [0, 1, 2, 3], 10, true);
-		this.sprite.animations.add('right', [5, 6, 7, 8], 10, true);
+	    //  Some animations, walking left and right.
+	    this.sprite.animations.add('right', [1, 2], 5, true);
+		this.sprite.animations.add('left', [4,5], 5, true);
+		this.sprite.animations.add('idle-right', [0,17], 1.5, true);
+		this.sprite.animations.add('idle-left', [3,18], 1.5, true);
 	}
 
 	moveLeft() {
+		this.direction = "left";
 		this.sprite.body.velocity.x = -(this.speed);
 		this.sprite.animations.play('left');
 	}
 
 	moveRight() {
+		this.direction = "right";
 		this.sprite.body.velocity.x = this.speed;
 		this.sprite.animations.play('right');
 	}
@@ -54,8 +57,14 @@ export default class Player {
 	}
 
 	idle() {
-		this.sprite.animations.stop();
-		this.sprite.frame = 4;
+		if(this.direction == "right") {
+			this.sprite.animations.play('idle-right');
+		} else if(this.direction == "left") {
+			this.sprite.animations.play('idle-left');
+		}
+
+		// this.moving.right = false;
+		// this.moving.left = false;
 	}
 
 	setName(name) {

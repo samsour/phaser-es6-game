@@ -1,4 +1,5 @@
 import Player from 'objects/Player';
+import Weapon from 'objects/Weapon';
 
 export default class Main extends Phaser.State {
 
@@ -22,11 +23,13 @@ export default class Main extends Phaser.State {
 	    //  This stops it from falling away when you jump on it
 	    this.ground.body.immovable = true;
 
-	    //  Now let's create two ledges
+	    //  Now let's create some ledges
 		this.ledge = this.platforms.create(400, 400, 'ground');
 		this.ledge = this.platforms.create(450, 100, 'ground');
 	    this.ledge = this.platforms.create(-150, 300, 'ground');
 	    this.ledge = this.platforms.create(360, 180, 'ground');
+
+		// And add a star
 
 		this.player1 = new Player(this.game);
 		this.player2 = new Player(this.game);
@@ -35,6 +38,19 @@ export default class Main extends Phaser.State {
 		this.player2.spawn(200,this.game.world.height - 250);
 
 		this.addControls();
+
+		
+
+
+		this.weapon = this.game.add.weapon(30, 'archer');
+		this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+
+		//  The speed at which the bullet is fired
+		this.weapon.bulletSpeed = 600;
+
+		//  Speed-up the rate of fire, allowing them to shoot 1 bullet every 60ms
+		this.weapon.fireRate = 100;
+		this.weapon.trackSprite(this.player1.sprite, 0, 0, true);
 	}
 
 	update() {
@@ -57,6 +73,10 @@ export default class Main extends Phaser.State {
 		if (this.keyboard.w.isDown && this.player1.sprite.body.touching.down && this.player1.sprite.hittingPlatform)
 		{	
 			this.player1.jump();
+		}
+		if (this.keyboard.space.isDown) {
+			console.log("Fire!");
+			this.weapon.fire();
 		}
 
 
@@ -81,7 +101,8 @@ export default class Main extends Phaser.State {
 			d: this.game.input.keyboard.addKey(Phaser.Keyboard.D),
 			i: this.game.input.keyboard.addKey(Phaser.Keyboard.I),
 			j: this.game.input.keyboard.addKey(Phaser.Keyboard.J),
-			l: this.game.input.keyboard.addKey(Phaser.Keyboard.L)
+			l: this.game.input.keyboard.addKey(Phaser.Keyboard.L),
+			space: this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR)
 		};
 	}
 }
