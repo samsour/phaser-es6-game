@@ -38,25 +38,13 @@ export default class Main extends Phaser.State {
 		this.player2.spawn(200,this.game.world.height - 250);
 
 		this.addControls();
-
-		
-
-
-		this.weapon = this.game.add.weapon(30, 'archer');
-		this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-
-		//  The speed at which the bullet is fired
-		this.weapon.bulletSpeed = 600;
-
-		//  Speed-up the rate of fire, allowing them to shoot 1 bullet every 60ms
-		this.weapon.fireRate = 100;
-		this.weapon.trackSprite(this.player1.sprite, 0, 0, true);
 	}
 
 	update() {
 		// update frames
 
 		this.player1.sprite.hittingPlatform = this.game.physics.arcade.collide(this.player1.sprite, this.platforms);
+		this.player1.sprite.hittingPlayer2 = this.game.physics.arcade.collide(this.player1.sprite, this.player2.sprite);
 		this.player1.sprite.body.velocity.x = 0;
 
 		this.player2.sprite.hittingPlatform = this.game.physics.arcade.collide(this.player2.sprite, this.platforms);
@@ -74,9 +62,11 @@ export default class Main extends Phaser.State {
 		{	
 			this.player1.jump();
 		}
-		if (this.keyboard.space.isDown) {
-			console.log("Fire!");
-			this.weapon.fire();
+		if (this.keyboard.s.isDown) {
+			this.player1.fire();
+		}
+		if(this.player1.sprite.hittingPlayer2) {
+			this.player1.sprite.body.velocity.y = -500;
 		}
 
 
@@ -92,17 +82,21 @@ export default class Main extends Phaser.State {
 		{	
 			this.player2.jump();
 		}
+		if (this.keyboard.k.isDown) {
+			this.player2.fire();
+		}
 	}
 
 	addControls() {
 		this.keyboard = {
 			w: this.game.input.keyboard.addKey(Phaser.Keyboard.W),
 			a: this.game.input.keyboard.addKey(Phaser.Keyboard.A),
+			s: this.game.input.keyboard.addKey(Phaser.Keyboard.S),
 			d: this.game.input.keyboard.addKey(Phaser.Keyboard.D),
 			i: this.game.input.keyboard.addKey(Phaser.Keyboard.I),
 			j: this.game.input.keyboard.addKey(Phaser.Keyboard.J),
-			l: this.game.input.keyboard.addKey(Phaser.Keyboard.L),
-			space: this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR)
+			k: this.game.input.keyboard.addKey(Phaser.Keyboard.K),
+			l: this.game.input.keyboard.addKey(Phaser.Keyboard.L)
 		};
 	}
 }
