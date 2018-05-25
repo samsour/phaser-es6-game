@@ -42,13 +42,13 @@ export default class Main extends Phaser.State {
 
 	update() {
 		// update frames
-
-		this.player1.sprite.hittingPlatform = this.game.physics.arcade.collide(this.player1.sprite, this.platforms);
-		this.player1.sprite.hittingPlayer2 = this.game.physics.arcade.collide(this.player1.sprite, this.player2.sprite);
 		this.player1.sprite.body.velocity.x = 0;
-
-		this.player2.sprite.hittingPlatform = this.game.physics.arcade.collide(this.player2.sprite, this.platforms);
 		this.player2.sprite.body.velocity.x = 0;
+		
+		this.game.physics.arcade.collide(this.player1.sprite, this.player2.sprite);
+		this.player1.sprite.hittingPlatform = this.game.physics.arcade.collide(this.player1.sprite, this.platforms);
+		this.player2.sprite.hittingPlatform = this.game.physics.arcade.collide(this.player2.sprite, this.platforms);
+		
 
 		// Player 1
 		if (this.keyboard.a.isDown){
@@ -58,15 +58,12 @@ export default class Main extends Phaser.State {
 		} else {
 			this.player1.idle();
 		}
-		if (this.keyboard.w.isDown && this.player1.sprite.body.touching.down && this.player1.sprite.hittingPlatform)
+		if (this.keyboard.w.isDown && this.player1.sprite.body.touching.down)
 		{	
 			this.player1.jump();
 		}
 		if (this.keyboard.s.isDown) {
 			this.player1.fire();
-		}
-		if(this.player1.sprite.hittingPlayer2) {
-			this.player1.sprite.body.velocity.y = -500;
 		}
 
 
