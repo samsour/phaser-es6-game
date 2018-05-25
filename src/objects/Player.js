@@ -16,14 +16,11 @@ export default class Player {
 		this.speed = 150;
 		this.jumpability = 420;
 
+		this.direction = "right";
 		this.gravity = 1000;
 		this.bounce = 0.3;
-
-		// Weapon stats
-		this.bulletSpeed = 400;
 		
 	    this.sprite = this.game.add.sprite(x, y, 'archer');
-	    //  Enable physics on the player
 		this.game.physics.arcade.enable(this.sprite);
 		this.sprite.enableBody = true;
 
@@ -36,28 +33,10 @@ export default class Player {
 		this.sprite.anchor.setTo(0.5,0.5);
 		this.sprite.smoothed = false;
 		this.sprite.scale.set(5,5);
-
 		this.sprite.body.setSize(10,14,0,0);
 
-	    //  Some animations, walking left and right.
-	    this.sprite.animations.add('right', [1, 2], 5, true);
-		this.sprite.animations.add('left', [4,5], 5, true);
-		this.sprite.animations.add('idle-right', [0,17], 1.5, true);
-		this.sprite.animations.add('idle-left', [3,18], 1.5, true);
-
-		// Add a weapon to the player
-		this.weapon = this.game.add.weapon(30, 'arrow');
-		this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-		//  The speed at which the bullet is fired
-		this.weapon.bulletSpeed = this.bulletSpeed;
-		//  Speed-up the rate of fire, allowing them to shoot 1 bullet every 60ms
-		this.weapon.fireRate = this.attackSpeed;
-		this.weapon.trackSprite(this.sprite, 0, 0, true);
-
-		this.weapon.bullets.forEach((b) => {
-			b.scale.setTo(5, 5);
-			b.angle = 90;
-		}, this);
+		this.addAnimations();
+		this.addWeapon();
 	}
 
 	moveLeft() {
@@ -87,26 +66,51 @@ export default class Player {
 	}
 
 	fire() {
-		if(this.direction == "left"){
-			this.weapon.bulletSpeed = -(this.bulletSpeed);
-			this.weapon.bullets.forEach((b) => {
-				b.angle = -90;
-				b.body.updateBounds();
-			}, this);
-		} else {
+		if(this.direction == "right"){
+			console.log("shooting right");
+			this.sprite.animations.play('attack-right');
 			this.weapon.bulletSpeed = this.bulletSpeed;
 			this.weapon.bullets.forEach((b) => {
 				b.angle = 90;
 				b.body.updateBounds();
 			}, this);
+		} else {
+			console.log("shooting left");
+			this.sprite.animations.play('attack-left');
+			this.weapon.bulletSpeed = -(this.bulletSpeed);
+			this.weapon.bullets.forEach((b) => {
+				b.angle = -90;
+				b.body.updateBounds();
+			}, this);
 		}
-
 		
-
 		this.weapon.fire();
 	}
 
-	setName(name) {
-		this.name = name;
+	addAnimations() {
+		this.sprite.animations.add('right', [1, 2], 5, true);
+		this.sprite.animations.add('left', [4,5], 5, true);
+		this.sprite.animations.add('idle-right', [0,17], 1.5, true);
+		this.sprite.animations.add('idle-left', [3,18], 1.5, true);
+		this.sprite.animations.add('attack-left', [11,12,13,14,15], 10, true);
+		this.sprite.animations.add('attack-right', [6,7,8,9,10], 10, true);
+	}
+
+	addWeapon() {
+		this.weapon = this.game.add.weapon(30, 'arrow');
+		this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+
+		//  The speed at which the bullet is fired
+		this.bulletSpeed = 400;
+		this.weapon.bulletSpeed = this.bulletSpeed;
+		
+		//  Speed-up the rate of fire, allowing them to shoot 1 bullet every 60ms
+		this.weapon.fireRate = this.attackSpeed;
+		this.weapon.trackSprite(this.sprite, 0, 0, true);
+
+		this.weapon.bullets.forEach((b) => {
+			b.scale.setTo(5, 5);
+			b.angle = 90;
+		}, this);
 	}
 }
