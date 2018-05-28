@@ -31,17 +31,19 @@ export default class Main extends Phaser.State {
 
 		// And add a star
 
-		this.player1 = new Player(this.game);
-		this.player2 = new Player(this.game);
+		this.player1 = new Player("Ralf", this.game);
+		this.player2 = new Player("Link", this.game);
 
 		this.player1.spawn(100,this.game.world.height - 250);
-		this.player2.spawn(200,this.game.world.height - 250);
+		this.player2.spawn(this.game.world.width - 200, this.game.world.height - 150);
 
 		this.addControls();
 	}
 
 	update() {
-		// update frames
+		// Update frames
+
+
 		this.player1.sprite.body.velocity.x = 0;
 		this.player2.sprite.body.velocity.x = 0;
 		
@@ -50,39 +52,44 @@ export default class Main extends Phaser.State {
 		this.player1.sprite.hittingPlatform = this.game.physics.arcade.collide(this.player1.sprite, this.platforms);
 		this.player2.sprite.hittingPlatform = this.game.physics.arcade.collide(this.player2.sprite, this.platforms);
 		
+		// Projectile detection
+		this.game.physics.arcade.overlap(this.player1.weapon.bullets, this.player2.sprite, this.projectileHitPlayer, null, this);
+		this.game.physics.arcade.overlap(this.player2.weapon.bullets, this.player1.sprite, this.projectileHitPlayer, null, this);
+
+		// Key Events
 
 		// Player 1
-		if (this.keyboard.a.isDown){
+		if (this.keyboard.a.isDown) {
 			this.player1.moveLeft();
 		} else if (this.keyboard.d.isDown) {
 			this.player1.moveRight();
-		} else {
+		} else if(!this.keyboard.s.isDown){
 			this.player1.idle();
 		}
-		if (this.keyboard.w.isDown && this.player1.sprite.body.touching.down)
-		{	
-			this.player1.jump();
-		}
+
 		if (this.keyboard.s.isDown) {
 			this.player1.fire();
 		}
+		if (this.keyboard.w.isDown && this.player1.sprite.body.touching.down) {	
+			this.player1.jump();
+		}
+
 
 
 		// Player 2
-		if (this.keyboard.j.isDown){
+		if (this.keyboard.j.isDown) {
 			this.player2.moveLeft();
 		} else if (this.keyboard.l.isDown) {
 			this.player2.moveRight();
-		} else {
-			console.log("idle");
+		} else if(!this.keyboard.k.isDown) {
 			this.player2.idle();
 		}
-		if (this.keyboard.i.isDown && this.player2.sprite.body.touching.down)
-		{	
-			this.player2.jump();
-		}
+
 		if (this.keyboard.k.isDown) {
 			this.player2.fire();
+		}
+		if (this.keyboard.i.isDown && this.player2.sprite.body.touching.down) {	
+			this.player2.jump();
 		}
 	
 	}
@@ -98,5 +105,18 @@ export default class Main extends Phaser.State {
 			k: this.game.input.keyboard.addKey(Phaser.Keyboard.K),
 			l: this.game.input.keyboard.addKey(Phaser.Keyboard.L)
 		};
+	}
+
+	projectileHitPlayer (victim, bullet) {
+		bullet.kill();
+		
+		victim.hp -= 10;
+		console.log(victim.name + " gets damaged.");
+
+		if (victim.hp <= 0) {
+			victim.alive = false;
+
+			victim.kill();
+		}
 	}
 }
